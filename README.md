@@ -60,11 +60,25 @@ qa-documentation-api/
 
 1. Clone o repositório e crie o ambiente virtual:
 
+Para Windows:
 ```bash
+git clone https://github.com/cleverneves/qa-documentation-api.git
+# ou 
+git clone git@github.com:cleverneves/qa-documentation-api.git
+
 python -m venv .venv
-# Windows
+
 .venv\Scripts\activate
-# Linux / macOS
+```
+
+Para Linux / macOS:
+```bash
+git clone https://github.com/cleverneves/qa-documentation-api.git
+# ou
+git clone git@github.com:cleverneves/qa-documentation-api.git
+
+python -m venv .venv
+
 source .venv/bin/activate
 ```
 
