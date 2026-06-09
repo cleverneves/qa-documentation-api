@@ -9,9 +9,12 @@ class QAService:
     def ask(self, question: str):
         result = self.qa_chain.invoke({"input": question})
 
-        return {
-            "answer": result["answer"],
-            "sources": [
-                doc.metadata for doc in result["context"]
-            ]
-        }
+        sources = [
+            {
+                "source": doc.metadata.get("source", "desconhecido"),
+                "page": doc.metadata.get("page"),
+            }
+            for doc in result["context"]
+        ]
+
+        return {"answer": result["answer"], "sources": sources}
