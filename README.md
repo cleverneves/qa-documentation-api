@@ -27,24 +27,24 @@ qa-documentation-api/
 │   └── ask.py                    # POST /ask
 │
 ├── schemas/
-│   └── ask_schema.py             # AskRequest / AskResponse
+│   └── ask_schema.py             # AskRequest / AskResponse / SourceDocument
 │
 ├── core/
-│   └── config.py                 # Variáveis de ambiente
+│   └── config.py                 # Variáveis de ambiente (OPENAI_API_KEY, MODEL_NAME)
 │
 ├── domain/services/
 │   └── qa_service.py             # Orquestração de negócio
 │
 ├── infra/
-│   ├── embeddings/               # OpenAIEmbeddings
-│   ├── llm/                      # ChatOpenAI
+│   ├── providers.py              # ChatOpenAI e OpenAIEmbeddings
 │   ├── rag/                      # Pipeline LCEL (create_retrieval_chain)
 │   └── vectorstore/              # FAISS load / save
 │
-└── ingestion/
-    ├── indexer.py                 # Script de ingestão de documentos
-    ├── loaders/                   # TextLoader
-    └── processors/                # RecursiveCharacterTextSplitter
+├── ingestion/
+│   ├── indexer.py                # Script de ingestão de documentos
+│   └── loaders/                  # Suporte a .txt, .md, .pdf, .docx
+│
+└── tests/                        # Suite de testes (pytest)
 ```
 
 ---
@@ -90,8 +90,14 @@ pip install -r requirements.txt
 
 3. Crie o arquivo `.env` na raiz do projeto com base no exemplo:
 
+**Linux / macOS:**
 ```bash
-cp .env.example .env
+cp infra/.env.example .env
+```
+
+**Windows (PowerShell):**
+```powershell
+copy infra\.env.example .env
 ```
 
 Edite o `.env` com sua chave:
@@ -107,13 +113,19 @@ MODEL_NAME="gpt-4o-mini"   # opcional — este é o padrão
 
 Antes de usar o endpoint `/ask`, é necessário indexar ao menos um documento para popular o vector store.
 
-Coloque o arquivo de texto em `data/` e execute:
+Um documento de exemplo já está disponível em `data/sample.txt`. Para indexá-lo:
 
 ```bash
 python -m ingestion.indexer
 ```
 
-Por padrão o script lê `data/sample.txt`. Para indexar outro arquivo, altere o caminho na chamada `run_indexing()` em `ingestion/indexer.py`.
+Para indexar outro arquivo, use o argumento `--file`:
+
+```bash
+python -m ingestion.indexer --file data/meu-documento.pdf
+```
+
+**Formatos suportados:** `.txt`, `.md`, `.pdf`, `.docx`
 
 O vector store será salvo em `data/vectorstore/`.
 
@@ -158,10 +170,22 @@ Envia uma pergunta e recebe a resposta gerada pelo LLM com base nos documentos i
 {
   "answer": "Conforme o documento, a política de férias prevê...",
   "sources": [
-    { "source": "data/sample.txt" }
+    { "source": "data/sample.txt", "page": null }
   ]
 }
 ```
+
+O campo `page` é preenchido automaticamente para arquivos PDF (número da página) e `null` para demais formatos.
+
+---
+
+## Testes
+
+```bash
+pytest tests/ -v
+```
+
+Os testes não dependem de chave de API nem de vector store — todo acesso à OpenAI e ao FAISS é mockado.
 
 ---
 
