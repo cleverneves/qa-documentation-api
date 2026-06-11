@@ -1,17 +1,18 @@
 import argparse
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from ingestion.loaders.document_loader import load_documents
-from ingestion.processors.chunker import get_chunker
-from infra.embeddings.embedding_provider import get_embeddings
+from infra.providers import get_embeddings
 from infra.vectorstore.vector_store import save_vectorstore
 from langchain_community.vectorstores import FAISS
+
+_CHUNKER = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
 
 
 def run_indexing(file_path: str):
     print(f"Carregando documento: {file_path}")
     docs = load_documents(file_path)
 
-    chunker = get_chunker()
-    chunks = chunker.split_documents(docs)
+    chunks = _CHUNKER.split_documents(docs)
     print(f"{len(chunks)} chunks gerados.")
 
     embeddings = get_embeddings()

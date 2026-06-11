@@ -1,8 +1,7 @@
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
-from infra.llm.llm_provider import get_llm
-from infra.embeddings.embedding_provider import get_embeddings
+from infra.providers import get_llm, get_embeddings
 from infra.vectorstore.vector_store import load_vectorstore
 
 _PROMPT = ChatPromptTemplate.from_messages([
