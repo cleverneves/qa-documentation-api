@@ -189,24 +189,38 @@ Os testes não dependem de chave de API nem de vector store — todo acesso à O
 
 ---
 
-## Executando com Docker
+## Executando com Docker Compose
+
+### 1. Indexar os documentos
+
+O vector store precisa ser populado antes de subir a API. Rode o serviço de ingestão:
+
+```bash
+docker compose --profile tools run --rm indexer
+```
+
+Para indexar outro arquivo:
+
+```bash
+docker compose --profile tools run --rm indexer python -m ingestion.indexer --file data/meu-doc.pdf
+```
+
+### 2. Subir a API
+
+```bash
+docker compose up api
+```
+
+A API estará disponível em `http://localhost:8000`.
+
+---
+
+### Executando com Docker (sem Compose)
 
 ```bash
 docker build -t qa-documentation-api -f infra/Dockerfile .
 docker run --env-file .env -p 8000:8000 qa-documentation-api
 ```
-
-> O vector store precisa ser gerado antes de buildar a imagem, ou montado como volume:
->
-> **Linux / macOS:**
-> ```bash
-> docker run --env-file .env -v $(pwd)/data:/app/data -p 8000:8000 qa-documentation-api
-> ```
->
-> **Windows (PowerShell):**
-> ```powershell
-> docker run --env-file .env -v ${PWD}/data:/app/data -p 8000:8000 qa-documentation-api
-> ```
 
 ---
 

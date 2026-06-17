@@ -1,0 +1,49 @@
+services:
+
+  # -----------------------------------------------------------------
+  # Ingestão: popula o vector store antes de subir a API.
+  # Uso: docker compose --profile tools run --rm indexer
+  #      docker compose --profile tools run --rm indexer --file data/meu-doc.pdf
+  # -----------------------------------------------------------------
+  indexer:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    command: python -m ingestion.indexer --file data/sample.txt
+    env_file:
+      - .env
+    volumes:
+      - vectorstore:/app/data/vectorstore
+    profiles:
+      - tools
+
+  # -----------------------------------------------------------------
+  # API: inicia somente após o vector store estar populado.
+  # -----------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - vectorstore:/app/data/vectorstore
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  vectorstore:
+    driver: local
