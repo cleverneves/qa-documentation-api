@@ -1,0 +1,142 @@
+---
+description: Guidelines for creating and maintaining Cursor rules.
+globs:
+alwaysApply: true
+---
+
+# Cursor Rules
+
+This document defines how Cursor rules must be created, organized, and maintained in this project.
+
+## Location
+
+All Cursor rule files **MUST** be created exclusively in:
+
+```text
+PROJECT_ROOT/.cursor/rules/
+```
+
+Expected directory structure:
+
+```text
+PROJECT_ROOT/
+├── .cursor/
+│   └── rules/
+│       ├── example-rule.mdc
+│       ├── another-rule.mdc
+│       └── ...
+└── ...
+```
+
+### Never create rule files:
+
+- In the project root.
+- In subdirectories outside `.cursor/rules`.
+- In any other location.
+
+---
+
+# Naming Conventions
+
+Every rule file **MUST**:
+
+- Use **kebab-case** for the filename.
+- Use the `.mdc` extension.
+- Have a descriptive name that clearly reflects the rule's purpose.
+
+### Good Examples
+
+```text
+nestjs.mdc
+prisma-best-practices.mdc
+docker-compose.mdc
+api-design.mdc
+```
+
+### Bad Examples
+
+```text
+NestJS.mdc
+Rule1.mdc
+bestPractices.mdc
+docker.txt
+```
+
+---
+
+# Before Creating a New Rule
+
+Always follow this workflow:
+
+1. Search for an existing rule covering the same topic.
+2. If a relevant rule exists, update it instead of creating a new one.
+3. Create a new rule only if the topic is not already covered.
+
+Avoid creating duplicate or overlapping rules.
+
+---
+
+# Required Rule Structure
+
+Every rule **MUST** follow this structure:
+
+````md
+---
+description: Short description of the rule's purpose
+globs: optional/path/**/*
+alwaysApply: false
+---
+
+# Rule Title
+
+Explain:
+
+- The purpose of the rule.
+- When the rule applies.
+- How it should be followed.
+
+## Guidelines
+
+- Clear instructions.
+- Best practices.
+- Constraints, when applicable.
+
+## Examples
+
+### Good
+
+```typescript
+// Example following the rule
+```
+
+### Bad
+
+```typescript
+// Example violating the rule
+```
+`````
+
+---
+
+# Best Practices
+
+Each rule should:
+
+* Address a single concern.
+* Be clear and concise.
+* Avoid ambiguity.
+* Include practical examples.
+* Be independent from other rules whenever possible.
+
+---
+
+# Avoid
+
+Do **NOT** create rules that are:
+
+* Duplicated.
+* Overly generic.
+* Specific to a temporary feature.
+* In conflict with existing rules.
+
+Whenever possible, extend an existing rule instead of creating a new one.

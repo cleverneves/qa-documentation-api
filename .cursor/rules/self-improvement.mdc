@@ -1,0 +1,166 @@
+---
+description: Guidelines for continuously improving Cursor rules based on emerging code patterns and best practices.
+globs: **/*
+alwaysApply: true
+---
+
+# Continuous Rule Improvement
+
+Continuously evaluate the codebase to determine whether existing Cursor rules should be updated or new ones should be created.
+
+---
+
+# When to Consider a Rule Update
+
+Consider creating or updating a rule when one or more of the following conditions are met:
+
+- The same implementation pattern appears in **three or more files**.
+- The same code review feedback is repeated multiple times.
+- A recurring bug could be prevented by documenting a standard.
+- A new framework, library, or tool is consistently adopted.
+- New architecture, security, or performance patterns emerge.
+- Existing rules no longer reflect the current implementation.
+
+---
+
+# Decision Process
+
+For every significant code change:
+
+1. Identify repeated implementation patterns.
+2. Search the existing `.cursor/rules` directory for related guidance.
+3. If a relevant rule already exists, update it.
+4. Otherwise, create a new rule.
+5. Avoid creating duplicate or overlapping rules.
+
+Always prefer improving an existing rule over creating a new one.
+
+---
+
+# Analysis Checklist
+
+When reviewing code, verify:
+
+- Repeated implementation patterns.
+- Consistent error handling.
+- Reusable architectural decisions.
+- Shared testing patterns.
+- Security best practices.
+- Performance optimizations.
+- References to external documentation.
+
+---
+
+# Rule Update Criteria
+
+Update an existing rule when:
+
+- Better examples exist in the codebase.
+- Additional edge cases have been identified.
+- Related rules have changed.
+- Implementation details have evolved.
+- External documentation has changed.
+- The rule is incomplete or ambiguous.
+
+---
+
+# Rule Creation Criteria
+
+Create a new rule only when:
+
+- The topic is not already covered.
+- The pattern is stable and reusable.
+- The pattern is expected to be used across the project.
+- The rule addresses a single concern.
+
+---
+
+# Do NOT Create a Rule When
+
+Do **NOT** create a rule if:
+
+- The pattern appears in fewer than three files.
+- It is specific to a single feature.
+- It represents temporary or experimental code.
+- The guidance already exists elsewhere.
+- The rule would duplicate another rule.
+
+---
+
+# Rule Quality Checklist
+
+Every Cursor rule should:
+
+- Solve one specific problem.
+- Have a clear and descriptive title.
+- Explain **why** the rule exists.
+- Explain **when** it applies.
+- Explain **how** to follow it.
+- Include practical examples.
+- Include both good and bad examples whenever possible.
+- Be easy to maintain.
+- Avoid unnecessary complexity.
+
+---
+
+# Example Pattern Recognition
+
+```typescript
+// Repeated pattern
+
+const data = await prisma.user.findMany({
+  select: {
+    id: true,
+    email: true,
+  },
+  where: {
+    status: "ACTIVE",
+  },
+});
+```
+
+If this pattern is consistently found across the project, consider updating `prisma.mdc` to document:
+
+- Standard `select` fields.
+- Common `where` conditions.
+- Performance optimization guidelines.
+- Query consistency recommendations.
+
+---
+
+# Documentation Maintenance
+
+Keep every rule synchronized with the codebase by:
+
+- Updating examples after refactoring.
+- Removing outdated guidance.
+- Updating links to external documentation.
+- Cross-referencing related rules when appropriate.
+
+---
+
+# Rule Deprecation
+
+When a rule is no longer applicable:
+
+- Mark it as deprecated.
+- Remove obsolete recommendations.
+- Document migration guidance if necessary.
+- Update any rules that reference it.
+
+---
+
+# Priority Order
+
+When multiple improvements are possible, prioritize them in this order:
+
+1. Security
+2. Correctness
+3. Architecture
+4. Performance
+5. Maintainability
+6. Code Style
+
+---
+
+Follow the guidelines defined in `cursor-rules.mdc` for rule formatting, organization, and file structure.
